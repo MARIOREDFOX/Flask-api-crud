@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-deploy
+  namespace: flask-auth 
+spec:
+  selector:
+    app: base-auth
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5003
+    protocol: TCP
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deploy
+  namespace: flask-auth    
+  labels:
+    app: base-auth
+spec: 
+  selector:
+    matchLabels:
+      app: base-auth
+  replicas: 1
+  template:  
+    metadata:
+      labels:
+        app: base-auth
+    spec:
+      containers: 
+        - name: flask-deploy
+          image: userid:4.0 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              name: frontport
+              hostPort: 5000
+              protocol: TCP
