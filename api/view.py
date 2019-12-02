@@ -1,61 +1,57 @@
 from app import app
 from flask import request, jsonify
-from models import Product
+from models import User
 from app import db
-from schema import product_schema, products_schema
+from schema import user_schema, users_schema
 
-# Create a Product
-@app.route('/product', methods=['POST'])
-def add_product():
-  name = request.json['name']
-  description = request.json['description']
-  price = request.json['price']
-  qty = request.json['qty']
 
-  new_product = Product(name, description, price, qty)
+@app.route("/user", methods=["POST"])
+def add_user():
+    username = request.json['username']
+    email = request.json['email']
 
-  db.session.add(new_product)
-  db.session.commit()
+    new_user = User(username, email)
 
-  return product_schema.jsonify(new_product)
+    db.session.add(new_user)
+    db.session.commit()
 
-# Get All Products
-@app.route('/product', methods=['GET'])
-def get_products():
-  all_products = Product.query.all()
-  result = products_schema.dump(all_products)
-  return jsonify(result.data)
+    return jsonify(new_user)
 
-# Get Single Products
-@app.route('/product/<id>', methods=['GET'])
-def get_product(id):
-  product = Product.query.get(id)
-  return product_schema.jsonify(product)
 
-# Update a Product
-@app.route('/product/<id>', methods=['PUT'])
-def update_product(id):
-  product = Product.query.get(id)
+# endpoint to show all users
+@app.route("/users", methods=["GET"])
+def get_user():
+    all_users = User.query.all()
+    result = users_schema.dump(all_users)
+    return jsonify(result)
 
-  name = request.json['name']
-  description = request.json['description']
-  price = request.json['price']
-  qty = request.json['qty']
 
-  product.name = name
-  product.description = description
-  product.price = price
-  product.qty = qty
+# endpoint to get user detail by id
+@app.route("/user/<id>", methods=["GET"])
+def user_detail(id):
+    user = User.query.get(id)
+    return user_schema.jsonify(user)
 
-  db.session.commit()
 
-  return product_schema.jsonify(product)
+# endpoint to update user
+@app.route("/user/<id>", methods=["PUT"])
+def user_update(id):
+    user = User.query.get(id)
+    username = request.json['username']
+    email = request.json['email']
 
-# Delete Product
-@app.route('/product/<id>', methods=['DELETE'])
-def delete_product(id):
-  product = Product.query.get(id)
-  db.session.delete(product)
-  db.session.commit()
+    user.email = email
+    user.username = username
 
-  return product_schema.jsonify(product)
+    db.session.commit()
+    return user_schema.jsonify(user)
+
+
+# endpoint to delete user
+@app.route("/user/<id>", methods=["DELETE"])
+def user_delete(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+
+    return user_schema.jsonify(user)

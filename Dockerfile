@@ -1,4 +1,4 @@
-FROM python:3.7.0-alpine3.8
+FROM python3
 
 
 # Current working directory
@@ -10,6 +10,8 @@ RUN pip3 install pipenv
 
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT [ "python" ]
+ENTRYPOINT ["python"]
 
-CMD [ "api/app.py", "run", "--host=0.0.0.0", "--port=5000" ]
+EXPOSE 5000
+
+CMD [ "app.py", "run", "--host=0.0.0.0" ]

@@ -1,9 +1,9 @@
 from app import ma
 
-class ProductSchema(ma.Schema):
-  class Meta:
-    fields = ('id', 'name', 'description', 'price', 'qty')
+class UserSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ('username', 'email')
 
-
-product_schema = ProductSchema()
-products_schema = ProductSchema(many=True)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
