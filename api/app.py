@@ -10,6 +10,9 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 from view import *
+from app import db
+
+db.init_app(app)
 
 # Run Server
 if __name__ == '__main__':
